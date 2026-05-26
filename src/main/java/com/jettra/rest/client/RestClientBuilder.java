@@ -41,7 +41,16 @@ public class RestClientBuilder {
         }
         
         String baseUri = annotation.baseUri();
-        if (baseUri.isEmpty()) {
+        String configBaseUri = com.jettra.server.config.JettraConfig.getProperty("baseUri");
+        if (configBaseUri != null && !configBaseUri.isEmpty()) {
+            // Si el baseUri en el config es completo y no hay override en la anotacion, se usa.
+            // O si la anotacion es parcial (ej. "/authors"), se concatena.
+            if (baseUri.isEmpty() || baseUri.startsWith("/")) {
+                baseUri = configBaseUri + baseUri;
+            } else {
+                baseUri = configBaseUri;
+            }
+        } else if (baseUri.isEmpty()) {
             baseUri = "http://localhost:8080/api";
         }
 
