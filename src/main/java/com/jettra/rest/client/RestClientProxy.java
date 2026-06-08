@@ -154,12 +154,12 @@ public class RestClientProxy implements InvocationHandler {
             return responseBuilder.build();
         }
 
-        if (returnType == void.class || returnType == Void.class) {
-            return null;
-        }
-
         if (response.statusCode() >= 400) {
             throw new RuntimeException("HTTP Error: " + response.statusCode() + " - " + response.body());
+        }
+
+        if (returnType == void.class || returnType == Void.class) {
+            return null;
         }
 
         // Deserialize to target return type
