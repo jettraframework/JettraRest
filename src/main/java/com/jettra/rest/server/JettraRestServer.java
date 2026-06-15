@@ -112,19 +112,20 @@ public class JettraRestServer {
             }
 
             String fullMethodPath = fullBase + methodPath;
+            String resolvedMethodPath = JettraServer.resolvePath(fullMethodPath);
             
             // Parse path parameters (e.g. /api/productos/{id} -> regex /api/productos/([^/]+))
             List<String> paramNames = new ArrayList<>();
-            Matcher matcher = Pattern.compile("\\{([^}]+)\\}").matcher(fullMethodPath);
+            Matcher matcher = Pattern.compile("\\{([^}]+)\\}").matcher(resolvedMethodPath);
             StringBuilder regex = new StringBuilder();
             int lastEnd = 0;
             while (matcher.find()) {
-                regex.append(Pattern.quote(fullMethodPath.substring(lastEnd, matcher.start())));
+                regex.append(Pattern.quote(resolvedMethodPath.substring(lastEnd, matcher.start())));
                 regex.append("([^/]+)");
                 paramNames.add(matcher.group(1));
                 lastEnd = matcher.end();
             }
-            regex.append(Pattern.quote(fullMethodPath.substring(lastEnd)));
+            regex.append(Pattern.quote(resolvedMethodPath.substring(lastEnd)));
             Pattern pattern = Pattern.compile(regex.toString() + "/?");
 
             boolean methodSecured = classSecured || method.isAnnotationPresent(Secured.class);
@@ -142,6 +143,7 @@ public class JettraRestServer {
                 try {
                     String requestPath = exchange.getRequestURI().getPath();
                     String requestMethod = exchange.getRequestMethod();
+                    System.out.println("[JettraRestServer] Processing request: " + requestMethod + " " + requestPath);
 
                     RestRoute matchedRoute = null;
                     Matcher routeMatcher = null;
