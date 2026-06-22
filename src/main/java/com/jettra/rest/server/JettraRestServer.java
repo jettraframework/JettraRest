@@ -197,7 +197,15 @@ public class JettraRestServer {
                                     roles.add(String.valueOf(r));
                                 }
                             } else if (rolesClaim instanceof String) {
-                                roles.add((String) rolesClaim);
+                                String rStr = (String) rolesClaim;
+                                if (rStr.startsWith("[") && rStr.endsWith("]")) {
+                                    rStr = rStr.substring(1, rStr.length() - 1);
+                                }
+                                for (String s : rStr.split(",")) {
+                                    if (!s.trim().isEmpty()) {
+                                        roles.add(s.trim());
+                                    }
+                                }
                             }
                         } catch (Exception e) {
                             // ignore or handle
