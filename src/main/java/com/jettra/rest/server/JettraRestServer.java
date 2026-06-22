@@ -1,6 +1,5 @@
 package com.jettra.rest.server;
 
-import com.google.gson.Gson;
 import com.jettra.jwt.JettraJWT;
 import com.jettra.server.JettraServer;
 import com.sun.net.httpserver.HttpExchange;
@@ -12,7 +11,6 @@ import com.jettra.rest.security.UserPrincipal;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.nio.charset.StandardCharsets;
@@ -22,7 +20,6 @@ import java.util.regex.Pattern;
 
 public class JettraRestServer {
 
-    private static final Gson gson = new Gson();
     private static JettraJWT jwtEngine;
     private static String basePath = "/api";
     private static String jwtSecret = "default_secret_key_jettra_rest_2026";
@@ -96,6 +93,9 @@ public class JettraRestServer {
         boolean classSecured = clazz.isAnnotationPresent(Secured.class);
         List<String> classRoles = clazz.isAnnotationPresent(RolesAllowed.class) ?
                 Arrays.asList(clazz.getAnnotation(RolesAllowed.class).value()) : List.of();
+        
+        List<String> declaredRoles = clazz.isAnnotationPresent(DeclareRoles.class) ?
+                Arrays.asList(clazz.getAnnotation(DeclareRoles.class).value()) : List.of();
 
         for (Method method : clazz.getDeclaredMethods()) {
             String httpMethod = null;
@@ -187,13 +187,20 @@ public class JettraRestServer {
                             return;
                         }
 
-                        // Try extracting roles or claims from JWT if supported by JWT payload
-                        // For simplicity, we can mock/fetch roles based on username
+                        // Extract roles or claims from JWT if supported by JWT payload
                         Set<String> roles = new HashSet<>();
-                        if ("admin".equalsIgnoreCase(username)) {
-                            roles.add("ADMIN");
-                        } else {
-                            roles.add("USER");
+                        try {
+                            Map<String, Object> payload = jwtEngine.getPayload(token);
+                            Object rolesClaim = payload.get("roles");
+                            if (rolesClaim instanceof List) {
+                                for (Object r : (List<?>) rolesClaim) {
+                                    roles.add(String.valueOf(r));
+                                }
+                            } else if (rolesClaim instanceof String) {
+                                roles.add((String) rolesClaim);
+                            }
+                        } catch (Exception e) {
+                            // ignore or handle
                         }
 
                         securityContext = new SecurityContext(new UserPrincipal(username), roles, true, "JWT");
@@ -240,7 +247,7 @@ public class JettraRestServer {
                             // Extract request body
                             String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
                             if (!body.isBlank()) {
-                                invokeArgs[i] = gson.fromJson(body, param.getType());
+                                invokeArgs[i] = com.jettra.rest.util.RestJson.fromJson(body, param.getType());
                             } else {
                                 invokeArgs[i] = null;
                             }
@@ -255,7 +262,7 @@ public class JettraRestServer {
                         Response resp = (Response) result;
                         byte[] bodyBytes = new byte[0];
                         if (resp.getEntity() != null) {
-                            String json = resp.getEntity() instanceof String ? (String) resp.getEntity() : gson.toJson(resp.getEntity());
+                            String json = resp.getEntity() instanceof String ? (String) resp.getEntity() : com.jettra.rest.util.RestJson.toJson(resp.getEntity());
                             bodyBytes = json.getBytes(StandardCharsets.UTF_8);
                         }
                         
@@ -270,7 +277,7 @@ public class JettraRestServer {
                     } else {
                         byte[] bodyBytes = new byte[0];
                         if (result != null) {
-                            String json = gson.toJson(result);
+                            String json = com.jettra.rest.util.RestJson.toJson(result);
                             bodyBytes = json.getBytes(StandardCharsets.UTF_8);
                         }
                         exchange.getResponseHeaders().set("Content-Type", "application/json; charset=UTF-8");
