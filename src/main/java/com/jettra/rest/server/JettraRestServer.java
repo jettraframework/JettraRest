@@ -82,6 +82,8 @@ public class JettraRestServer {
             throw new IllegalArgumentException("Resource class must be annotated with @Path");
         }
 
+        injectDependencies(resource);
+
         String classPath = clazz.getAnnotation(Path.class).value();
         if (!classPath.startsWith("/")) {
             classPath = "/" + classPath;
@@ -339,6 +341,45 @@ public class JettraRestServer {
         exchange.sendResponseHeaders(status, bytes.length);
         try (OutputStream os = exchange.getResponseBody()) {
             os.write(bytes);
+        }
+    }
+
+    private static void injectDependencies(Object target) {
+        if (target == null) return;
+        Class<?> clazz = target.getClass();
+        while (clazz != null && clazz != Object.class) {
+            for (java.lang.reflect.Field field : clazz.getDeclaredFields()) {
+                boolean hasInject = false;
+                for (java.lang.annotation.Annotation ann : field.getAnnotations()) {
+                    if (ann.annotationType().getSimpleName().equals("Inject")) {
+                        hasInject = true;
+                        break;
+                    }
+                }
+                if (hasInject) {
+                    try {
+                        field.setAccessible(true);
+                        if (field.get(target) == null) {
+                            Class<?> type = field.getType();
+                            Class<?> implClass = type;
+                            if (type.isInterface()) {
+                                try {
+                                    implClass = Class.forName(type.getName() + "Impl");
+                                } catch (ClassNotFoundException e) {
+                                    System.err.println("[JettraRestServer] Implementation not found for interface " + type.getName());
+                                    continue;
+                                }
+                            }
+                            Object injectedInstance = implClass.getDeclaredConstructor().newInstance();
+                            field.set(target, injectedInstance);
+                            injectDependencies(injectedInstance);
+                        }
+                    } catch (Exception e) {
+                        System.err.println("[JettraRestServer] Error injecting dependency into " + field.getName() + ": " + e.getMessage());
+                    }
+                }
+            }
+            clazz = clazz.getSuperclass();
         }
     }
 }

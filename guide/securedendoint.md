@@ -4,7 +4,7 @@ En `JettraRest`, la seguridad se gestiona usando anotaciones sobre los controlad
 
 ## Anotaciones Disponibles
 
-- `@DeclareRoles({"ADMIN", "USER"})`: Se usa a nivel de clase para declarar los roles válidos que la clase puede gestionar.
+- `@DeclareRoles({"ADMIN", "MANAGER"})`: Se usa a nivel de clase para declarar los roles válidos que la clase puede gestionar.
 - `@RolesAllowed("ADMIN")`: Se usa a nivel de clase o de método. Define qué roles tienen acceso al endpoint especificado.
 - `@Secured`: Marca un endpoint como asegurado (requiere autenticación con JWT), aunque no exija un rol específico.
 - `@PermitAll`: Permite acceso sin restricciones, ignorando requerimientos de seguridad.
@@ -15,7 +15,7 @@ En `JettraRest`, la seguridad se gestiona usando anotaciones sobre los controlad
 import com.jettra.rest.annotations.*;
 
 @Path("/admin")
-@DeclareRoles({"ADMIN", "USER"}) // Declara los roles usados en la aplicación
+@DeclareRoles({"ADMIN", "MANAGER"}) // Declara los roles usados en la aplicación
 public class AdminResource {
 
     @GET
