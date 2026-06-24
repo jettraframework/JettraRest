@@ -84,3 +84,7 @@ public class AuthorService {
 - **Parámetros**: `@PathParam`, `@QueryParam`, `@HeaderParam`.
 - **Serialización/Deserialización Automática**: El cuerpo de la petición (cuando no se anota) se serializa a JSON automáticamente y el cuerpo de la respuesta se mapea al tipo de retorno genérico del método.
 - **Gestión de Errores**: Si el endpoint devuelve un código HTTP `>= 400`, se lanzará una `RuntimeException`.
+
+
+## Seguridad RestClient
+Se valida mediante el pase del JWT al Backend en la cabecera.

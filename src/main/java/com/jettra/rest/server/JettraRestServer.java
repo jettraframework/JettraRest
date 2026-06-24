@@ -1,5 +1,7 @@
 package com.jettra.rest.server;
 
+import com.jettra.rest.annotations.accreditation.DeclareRoles;
+import com.jettra.rest.annotations.accreditation.RolesAllowed;
 import com.jettra.jwt.JettraJWT;
 import com.jettra.server.JettraServer;
 import com.sun.net.httpserver.HttpExchange;
