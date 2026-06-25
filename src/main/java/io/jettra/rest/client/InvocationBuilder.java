@@ -1,7 +1,7 @@
-package com.jettra.rest.client;
+package io.jettra.rest.client;
 
 import com.google.gson.Gson;
-import com.jettra.rest.core.Response;
+import io.jettra.rest2.core.Response;
 
 import java.net.URI;
 import java.net.http.HttpRequest;

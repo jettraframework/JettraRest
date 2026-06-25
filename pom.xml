@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.jettra</groupId>
+    <groupId>io.jettra</groupId>
     <artifactId>JettraRest</artifactId>
     <version>1.0-SNAPSHOT</version>
 
@@ -12,21 +12,33 @@
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+          <jettra.annotation.version>1.0-SNAPSHOT</jettra.annotation.version>
+        <jettra.jwt.version>1.0-SNAPSHOT</jettra.jwt.version>
+        <jettra.appserver.version>1.0-SNAPSHOT</jettra.appserver.version>
     </properties>
 
     <dependencies>
         <!-- Jettra Server core -->
         <dependency>
             <groupId>com.jettra</groupId>
-            <artifactId>JettraServer</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <artifactId>JettraAppServer</artifactId>
+          <version>${jettra.appserver.version}</version>
+              <scope>provided</scope>
         </dependency>
 
         <!-- Jettra JWT for security integration -->
         <dependency>
             <groupId>com.jettra</groupId>
             <artifactId>JettraJWT</artifactId>
-            <version>1.0-SNAPSHOT</version>
+       <version>${jettra.jwt.version}</version>
+              <scope>provided</scope>
+        </dependency>
+        
+         <dependency>
+            <groupId>io.jettra</groupId>
+            <artifactId>JettraAnnotation</artifactId>
+       <version>${jettra.annotation.version}</version>
+             <scope>provided</scope>
         </dependency>
 
     </dependencies>

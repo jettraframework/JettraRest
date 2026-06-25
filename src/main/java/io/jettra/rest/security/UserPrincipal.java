@@ -1,4 +1,4 @@
-package com.jettra.rest.security;
+package io.jettra.rest.security;
 
 import java.security.Principal;
 

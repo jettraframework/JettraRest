@@ -1,8 +1,15 @@
-package com.jettra.rest.client;
+package io.jettra.rest.client;
 
+import io.jettra.rest.annotations.Context;
+import io.jettra.rest.annotations.QueryParam;
+import io.jettra.rest.annotations.PathParam;
+import io.jettra.rest.annotations.DELETE;
+import io.jettra.rest.annotations.PUT;
+import io.jettra.rest.annotations.HeaderParam;
+import io.jettra.rest.annotations.Path;
+import io.jettra.rest.annotations.POST;
 import com.google.gson.Gson;
-import com.jettra.rest.annotations.*;
-import com.jettra.rest.core.Response;
+import io.jettra.rest2.core.Response;
 
 import java.lang.reflect.*;
 import java.net.URI;

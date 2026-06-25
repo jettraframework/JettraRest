@@ -1,4 +1,4 @@
-package com.jettra.rest.client;
+package io.jettra.rest.client;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

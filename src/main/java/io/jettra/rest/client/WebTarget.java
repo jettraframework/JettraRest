@@ -1,4 +1,4 @@
-package com.jettra.rest.client;
+package io.jettra.rest.client;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;

@@ -1,15 +1,24 @@
-package com.jettra.rest.server;
+package io.jettra.rest.server;
 
-import com.jettra.rest.annotations.accreditation.DeclareRoles;
-import com.jettra.rest.annotations.accreditation.RolesAllowed;
+import io.jettra.rest.annotations.Context;
+import io.jettra.rest.annotations.QueryParam;
+import io.jettra.rest.annotations.GET;
+import io.jettra.rest.annotations.PathParam;
+import io.jettra.rest.annotations.DELETE;
+import io.jettra.rest.annotations.PUT;
+import io.jettra.rest.annotations.Secured;
+import io.jettra.rest.annotations.Path;
+import io.jettra.rest.annotations.PermitAll;
+import io.jettra.rest.annotations.POST;
+import io.jettra.rest.annotations.accreditation.DeclareRoles;
+import io.jettra.rest.annotations.accreditation.RolesAllowed;
 import com.jettra.jwt.JettraJWT;
 import com.jettra.server.JettraServer;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import com.jettra.rest.annotations.*;
-import com.jettra.rest.core.Response;
-import com.jettra.rest.security.SecurityContext;
-import com.jettra.rest.security.UserPrincipal;
+import io.jettra.rest2.core.Response;
+import io.jettra.rest.security.SecurityContext;
+import io.jettra.rest.security.UserPrincipal;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -259,7 +268,7 @@ public class JettraRestServer {
                             // Extract request body
                             String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
                             if (!body.isBlank()) {
-                                invokeArgs[i] = com.jettra.rest.util.RestJson.fromJson(body, param.getType());
+                                invokeArgs[i] = io.jettra.rest.util.RestJson.fromJson(body, param.getType());
                             } else {
                                 invokeArgs[i] = null;
                             }
@@ -274,7 +283,7 @@ public class JettraRestServer {
                         Response resp = (Response) result;
                         byte[] bodyBytes = new byte[0];
                         if (resp.getEntity() != null) {
-                            String json = resp.getEntity() instanceof String ? (String) resp.getEntity() : com.jettra.rest.util.RestJson.toJson(resp.getEntity());
+                            String json = resp.getEntity() instanceof String ? (String) resp.getEntity() : io.jettra.rest.util.RestJson.toJson(resp.getEntity());
                             bodyBytes = json.getBytes(StandardCharsets.UTF_8);
                         }
                         
@@ -289,7 +298,7 @@ public class JettraRestServer {
                     } else {
                         byte[] bodyBytes = new byte[0];
                         if (result != null) {
-                            String json = com.jettra.rest.util.RestJson.toJson(result);
+                            String json = io.jettra.rest.util.RestJson.toJson(result);
                             bodyBytes = json.getBytes(StandardCharsets.UTF_8);
                         }
                         exchange.getResponseHeaders().set("Content-Type", "application/json; charset=UTF-8");

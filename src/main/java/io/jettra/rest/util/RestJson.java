@@ -1,4 +1,4 @@
-package com.jettra.rest.util;
+package io.jettra.rest.util;
 
 import com.jettra.jwt.JettraJson;
 import java.lang.reflect.Field;

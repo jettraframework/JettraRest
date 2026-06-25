@@ -1,4 +1,4 @@
-package com.jettra.rest.client;
+package io.jettra.rest.client;
 
 public class Entity<T> {
     private final T entity;

@@ -1,4 +1,4 @@
-package com.jettra.rest.client.processor;
+package io.jettra.rest.client.processor;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
@@ -16,7 +16,7 @@ import java.io.PrintWriter;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@SupportedAnnotationTypes("com.jettra.rest.client.RestClient")
+@SupportedAnnotationTypes("io.jettra.rest.client.RestClient")
 public class RestClientProcessor extends AbstractProcessor {
 
     @Override

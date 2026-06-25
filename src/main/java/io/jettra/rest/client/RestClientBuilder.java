@@ -1,4 +1,4 @@
-package com.jettra.rest.client;
+package io.jettra.rest.client;
 
 import java.lang.reflect.Proxy;
 import java.net.http.HttpClient;
