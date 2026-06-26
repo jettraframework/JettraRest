@@ -12,33 +12,40 @@
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-          <jettra.annotation.version>1.0-SNAPSHOT</jettra.annotation.version>
+        <jettra.annotation.version>1.0-SNAPSHOT</jettra.annotation.version>
         <jettra.jwt.version>1.0-SNAPSHOT</jettra.jwt.version>
         <jettra.appserver.version>1.0-SNAPSHOT</jettra.appserver.version>
+        <jettra.json.version>1.0-SNAPSHOT</jettra.json.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>io.jettra</groupId>
+            <artifactId>JettraJSON</artifactId>
+            <version>${jettra.json.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- Jettra Server core -->
         <dependency>
             <groupId>io.jettra</groupId>
             <artifactId>JettraAppServer</artifactId>
-          <version>${jettra.appserver.version}</version>
-              <scope>provided</scope>
+            <version>${jettra.appserver.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Jettra JWT for security integration -->
         <dependency>
             <groupId>io.jettra</groupId>
             <artifactId>JettraJWT</artifactId>
-       <version>${jettra.jwt.version}</version>
-              <scope>provided</scope>
+            <version>${jettra.jwt.version}</version>
+            <scope>provided</scope>
         </dependency>
         
-         <dependency>
+        <dependency>
             <groupId>io.jettra</groupId>
             <artifactId>JettraAnnotation</artifactId>
-       <version>${jettra.annotation.version}</version>
-             <scope>provided</scope>
+            <version>${jettra.annotation.version}</version>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>

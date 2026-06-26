@@ -8,7 +8,7 @@ import io.jettra.rest.annotations.PUT;
 import io.jettra.rest.annotations.HeaderParam;
 import io.jettra.rest.annotations.Path;
 import io.jettra.rest.annotations.POST;
-import com.google.gson.Gson;
+import io.jettra.json.JettraJson;
 import io.jettra.rest.core.Response;
 
 import java.lang.reflect.*;
@@ -19,9 +19,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class RestClientProxy implements InvocationHandler {
@@ -29,7 +27,7 @@ public class RestClientProxy implements InvocationHandler {
     private final HttpClient httpClient;
     private final String baseUri;
     private final int timeoutMillis;
-    private final Gson gson = new Gson();
+    private final JettraJson jettraJson = new JettraJson();
 
     public RestClientProxy(HttpClient httpClient, String baseUri, int timeoutMillis) {
         this.httpClient = httpClient;
@@ -127,8 +125,8 @@ public class RestClientProxy implements InvocationHandler {
         // Set HTTP method & body publisher
         HttpRequest.BodyPublisher bodyPublisher;
         if (bodyEntity != null) {
-            String json = gson.toJson(bodyEntity);
-            bodyPublisher = HttpRequest.BodyPublishers.ofString(json);
+            String jsonStr = jettraJson.toJson(bodyEntity);
+            bodyPublisher = HttpRequest.BodyPublishers.ofString(jsonStr);
             if (!hasContentType) {
                 builder.header("Content-Type", "application/json");
             }
@@ -171,6 +169,6 @@ public class RestClientProxy implements InvocationHandler {
 
         // Deserialize to target return type
         Type genericReturnType = method.getGenericReturnType();
-        return gson.fromJson(response.body(), genericReturnType);
+        return jettraJson.fromJson(response.body(), genericReturnType);
     }
 }

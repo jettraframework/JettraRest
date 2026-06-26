@@ -1,6 +1,6 @@
 package io.jettra.rest.client;
 
-import com.google.gson.Gson;
+import io.jettra.json.JettraJson;
 import io.jettra.rest.core.Response;
 
 import java.net.URI;
@@ -15,7 +15,7 @@ public class InvocationBuilder {
     private final Client client;
     private final String uri;
     private final Map<String, String> headers = new HashMap<>();
-    private final Gson gson = new Gson();
+    private final JettraJson gson = new JettraJson();
 
     public InvocationBuilder(Client client, String uri) {
         this.client = client;
