@@ -9,7 +9,7 @@ import io.jettra.rest.annotations.HeaderParam;
 import io.jettra.rest.annotations.Path;
 import io.jettra.rest.annotations.POST;
 import com.google.gson.Gson;
-import io.jettra.rest2.core.Response;
+import io.jettra.rest.core.Response;
 
 import java.lang.reflect.*;
 import java.net.URI;

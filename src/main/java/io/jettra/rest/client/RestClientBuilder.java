@@ -41,7 +41,7 @@ public class RestClientBuilder {
         }
         
         String baseUri = annotation.baseUri();
-        String configBaseUri = com.jettra.server.config.JettraConfig.getProperty("baseUri");
+        String configBaseUri = io.jettra.server.config.JettraConfig.getProperty("baseUri");
         if (configBaseUri != null && !configBaseUri.isEmpty()) {
             // Si el baseUri en el config es completo y no hay override en la anotacion, se usa.
             // O si la anotacion es parcial (ej. "/authors"), se concatena.

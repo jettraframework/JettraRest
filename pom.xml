@@ -20,7 +20,7 @@
     <dependencies>
         <!-- Jettra Server core -->
         <dependency>
-            <groupId>com.jettra</groupId>
+            <groupId>io.jettra</groupId>
             <artifactId>JettraAppServer</artifactId>
           <version>${jettra.appserver.version}</version>
               <scope>provided</scope>
@@ -28,7 +28,7 @@
 
         <!-- Jettra JWT for security integration -->
         <dependency>
-            <groupId>com.jettra</groupId>
+            <groupId>io.jettra</groupId>
             <artifactId>JettraJWT</artifactId>
        <version>${jettra.jwt.version}</version>
               <scope>provided</scope>

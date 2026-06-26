@@ -1,6 +1,6 @@
 package io.jettra.rest.util;
 
-import com.jettra.jwt.JettraJson;
+import io.jettra.jwt.JettraJson;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;

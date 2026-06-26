@@ -12,11 +12,11 @@ import io.jettra.rest.annotations.PermitAll;
 import io.jettra.rest.annotations.POST;
 import io.jettra.rest.annotations.accreditation.DeclareRoles;
 import io.jettra.rest.annotations.accreditation.RolesAllowed;
-import com.jettra.jwt.JettraJWT;
-import com.jettra.server.JettraServer;
+import io.jettra.jwt.JettraJWT;
+import io.jettra.server.JettraServer;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import io.jettra.rest2.core.Response;
+import io.jettra.rest.core.Response;
 import io.jettra.rest.security.SecurityContext;
 import io.jettra.rest.security.UserPrincipal;
 

@@ -61,7 +61,7 @@ public class RestClientProcessor extends AbstractProcessor {
                 out.println("package " + targetPackage + ";");
                 out.println();
                 out.println("import " + interfaceElement.getQualifiedName().toString() + ";");
-                out.println("import com.jettra.rest.client.RestClientBuilder;");
+                out.println("import io.jettra.rest.client.RestClientBuilder;");
                 out.println();
                 out.println("public class " + targetClassName + " implements " + interfaceName + " {");
                 out.println();
