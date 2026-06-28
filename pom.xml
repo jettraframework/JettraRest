@@ -6,16 +6,16 @@
 
     <groupId>io.jettra</groupId>
     <artifactId>JettraRest</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jettra.annotation.version>1.0-SNAPSHOT</jettra.annotation.version>
-        <jettra.jwt.version>1.0-SNAPSHOT</jettra.jwt.version>
-        <jettra.appserver.version>1.0-SNAPSHOT</jettra.appserver.version>
-        <jettra.json.version>1.0-SNAPSHOT</jettra.json.version>
+        <jettra.annotation.version>1.0.0-SNAPSHOT</jettra.annotation.version>
+        <jettra.jwt.version>1.0.0-SNAPSHOT</jettra.jwt.version>
+        <jettra.appserver.version>1.0.0-SNAPSHOT</jettra.appserver.version>
+        <jettra.json.version>1.0.0-SNAPSHOT</jettra.json.version>
     </properties>
 
     <dependencies>
