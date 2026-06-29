@@ -16,6 +16,10 @@ import java.io.PrintWriter;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.google.auto.service.AutoService;
+import javax.annotation.processing.Processor;
+
+@AutoService(Processor.class)
 @SupportedAnnotationTypes("io.jettra.rest.client.RestClient")
 public class RestClientProcessor extends AbstractProcessor {
 
