@@ -87,6 +87,22 @@ public class JettraRestServer {
         }
     }
 
+    public static void registerDiscovered(JettraServer server, Class<?> mainClass) {
+        try {
+            List<Class<?>> discovered = io.jettra.server.discoverer.DiscoveredRegistry.getDiscoveredClasses(mainClass);
+            for (Class<?> clazz : discovered) {
+                // Solo registramos los que tienen @Path o alguna anotacion requerida, 
+                // pero si fueron descubiertos, asumimos que son controladores si no fallan.
+                if (clazz.isAnnotationPresent(Path.class)) {
+                    register(server, clazz);
+                    System.out.println("[JettraRestServer] Controlador auto-registrado: " + clazz.getName());
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("[JettraRestServer] Error durante auto-registro: " + e.getMessage());
+        }
+    }
+
     public static void register(JettraServer server, Object resource) {
         Class<?> clazz = resource.getClass();
         if (!clazz.isAnnotationPresent(Path.class)) {
