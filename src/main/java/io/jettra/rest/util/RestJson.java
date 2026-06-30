@@ -12,29 +12,61 @@ public class RestJson {
         if (json == null || json.trim().isEmpty()) return null;
         try {
             Map<String, Object> map = JettraJson.parse(json);
-            T instance = clazz.getDeclaredConstructor().newInstance();
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
-                try {
-                    Field field = clazz.getDeclaredField(entry.getKey());
-                    field.setAccessible(true);
-                    Object value = entry.getValue();
-                    if (value != null && !field.getType().isAssignableFrom(value.getClass())) {
-                        if (field.getType() == String.class) {
+            if (clazz.isRecord()) {
+                java.lang.reflect.RecordComponent[] components = clazz.getRecordComponents();
+                Class<?>[] parameterTypes = new Class<?>[components.length];
+                Object[] args = new Object[components.length];
+                
+                for (int i = 0; i < components.length; i++) {
+                    java.lang.reflect.RecordComponent rc = components[i];
+                    parameterTypes[i] = rc.getType();
+                    Object value = map.get(rc.getName());
+                    
+                    if (value != null && !rc.getType().isAssignableFrom(value.getClass())) {
+                        if (rc.getType() == String.class) {
                             value = value.toString();
-                        } else if (field.getType() == int.class || field.getType() == Integer.class) {
+                        } else if (rc.getType() == int.class || rc.getType() == Integer.class) {
                             value = Integer.parseInt(value.toString());
-                        } else if (field.getType() == long.class || field.getType() == Long.class) {
+                        } else if (rc.getType() == long.class || rc.getType() == Long.class) {
                             value = Long.parseLong(value.toString());
-                        } else if (field.getType() == boolean.class || field.getType() == Boolean.class) {
+                        } else if (rc.getType() == boolean.class || rc.getType() == Boolean.class) {
                             value = Boolean.parseBoolean(value.toString());
+                        } else if (rc.getType() == java.util.UUID.class) {
+                            value = java.util.UUID.fromString(value.toString());
                         }
                     }
-                    field.set(instance, value);
-                } catch (NoSuchFieldException e) {
-                    // ignore unknown fields
+                    args[i] = value;
                 }
+                java.lang.reflect.Constructor<T> constructor = clazz.getDeclaredConstructor(parameterTypes);
+                constructor.setAccessible(true);
+                return constructor.newInstance(args);
+            } else {
+                T instance = clazz.getDeclaredConstructor().newInstance();
+                for (Map.Entry<String, Object> entry : map.entrySet()) {
+                    try {
+                        Field field = clazz.getDeclaredField(entry.getKey());
+                        field.setAccessible(true);
+                        Object value = entry.getValue();
+                        if (value != null && !field.getType().isAssignableFrom(value.getClass())) {
+                            if (field.getType() == String.class) {
+                                value = value.toString();
+                            } else if (field.getType() == int.class || field.getType() == Integer.class) {
+                                value = Integer.parseInt(value.toString());
+                            } else if (field.getType() == long.class || field.getType() == Long.class) {
+                                value = Long.parseLong(value.toString());
+                            } else if (field.getType() == boolean.class || field.getType() == Boolean.class) {
+                                value = Boolean.parseBoolean(value.toString());
+                            } else if (field.getType() == java.util.UUID.class) {
+                                value = java.util.UUID.fromString(value.toString());
+                            }
+                        }
+                        field.set(instance, value);
+                    } catch (NoSuchFieldException e) {
+                        // ignore unknown fields
+                    }
+                }
+                return instance;
             }
-            return instance;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
