@@ -140,7 +140,7 @@ public class JettraRestServer {
                 methodPath = "/" + methodPath;
             }
 
-            String fullMethodPath = fullBase + methodPath;
+            String fullMethodPath = fullBase + (methodPath.equals("/") ? "" : methodPath);
             String resolvedMethodPath = JettraServer.resolvePath(fullMethodPath);
             
             // Parse path parameters (e.g. /api/productos/{id} -> regex /api/productos/([^/]+))
