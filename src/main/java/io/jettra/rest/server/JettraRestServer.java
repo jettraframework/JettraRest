@@ -246,7 +246,7 @@ public class JettraRestServer {
                         if (!matchedRoute.rolesAllowed.isEmpty()) {
                             boolean hasRole = false;
                             for (String role : matchedRoute.rolesAllowed) {
-                                if (securityContext.isUserInRole(role)) {
+                                if (securityContext.isUserInRole(role) || checkSynonym(role, securityContext.getRoles())) {
                                     hasRole = true;
                                     break;
                                 }
@@ -408,5 +408,36 @@ public class JettraRestServer {
             }
             clazz = clazz.getSuperclass();
         }
+    }
+
+    private static boolean checkSynonym(String pluginRole, Set<String> userRoles) {
+        if (userRoles == null || userRoles.isEmpty()) return false;
+        try (InputStream is = JettraRestServer.class.getClassLoader().getResourceAsStream("plugin-config.json")) {
+            if (is != null) {
+                String content = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+                String pRoleStr = "\"plugin-security-role\"\\s*:\\s*\"" + Pattern.quote(pluginRole) + "\"";
+                String pRoleStrLegacy = "\"plugin-role\"\\s*:\\s*\"" + Pattern.quote(pluginRole) + "\"";
+
+                String[] blocks = content.split("\\{");
+                for (String block : blocks) {
+                    boolean matchesPluginRole = Pattern.compile(pRoleStr).matcher(block).find() || Pattern.compile(pRoleStrLegacy).matcher(block).find();
+                    if (matchesPluginRole) {
+                        for (String userRole : userRoles) {
+                            String aSecRoleStr = "\"applicative-security-role\"\\s*:\\s*\"" + Pattern.quote(userRole) + "\"";
+                            String aRoleStr = "\"applicative-role\"\\s*:\\s*\"" + Pattern.quote(userRole) + "\"";
+                            String aRoleStrLegacy = "\"application-role\"\\s*:\\s*\"" + Pattern.quote(userRole) + "\"";
+                            if (Pattern.compile(aSecRoleStr).matcher(block).find() ||
+                                Pattern.compile(aRoleStr).matcher(block).find() ||
+                                Pattern.compile(aRoleStrLegacy).matcher(block).find()) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            // ignore
+        }
+        return false;
     }
 }

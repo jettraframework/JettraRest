@@ -25,6 +25,10 @@ public class SecurityContext {
         return roles.contains(role);
     }
 
+    public Set<String> getRoles() {
+        return roles;
+    }
+
     public boolean isSecure() {
         return secure;
     }
