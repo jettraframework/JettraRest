@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
 public class JettraRestServer {
 
     private static JettraJWT jwtEngine;
-    private static String basePath = "/api";
+    private static String basePath = "";
     private static String jwtSecret = "default_secret_key_jettra_rest_2026";
     private static long jwtExpiration = 3600000;
     private static String authHeaderName = "Authorization";
@@ -44,15 +44,30 @@ public class JettraRestServer {
             Properties props = new Properties();
             if (is != null) {
                 props.load(is);
-                basePath = props.getProperty("jettra.rest.base-path", "/api");
+                basePath = props.getProperty("jettra.rest.base-path", "");
                 jwtSecret = props.getProperty("jettra.rest.security.jwt.secret", jwtSecret);
                 jwtExpiration = Long.parseLong(props.getProperty("jettra.rest.security.jwt.expiration-millis", String.valueOf(jwtExpiration)));
                 authHeaderName = props.getProperty("jettra.rest.security.header-name", "Authorization");
                 tokenPrefix = props.getProperty("jettra.rest.security.token-prefix", "Bearer ");
+            } else {
+                basePath = "";
             }
         } catch (Exception e) {
+            basePath = "";
             System.err.println("[JettraRest] Could not load jettra-rest.properties. Using default settings.");
         }
+
+        try {
+            String configSecret = io.jettra.server.config.JettraConfig.getProperty("server.JWT_SECRET");
+            if (configSecret != null && !configSecret.isBlank()) {
+                jwtSecret = configSecret.trim();
+            }
+            String configExp = io.jettra.server.config.JettraConfig.getProperty("server.JWT_EXPIRATION");
+            if (configExp != null && !configExp.isBlank()) {
+                jwtExpiration = Long.parseLong(configExp.trim());
+            }
+        } catch (Exception ignored) {}
+
         jwtEngine = new JettraJWT(jwtSecret, jwtExpiration);
     }
 
@@ -110,6 +125,9 @@ public class JettraRestServer {
         }
 
         injectDependencies(resource);
+        try {
+            io.jettra.server.config.ConfigInjector.inject(resource);
+        } catch (Throwable ignored) {}
 
         String classPath = clazz.getAnnotation(Path.class).value();
         if (!classPath.startsWith("/")) {
